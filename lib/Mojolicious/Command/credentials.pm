@@ -1,6 +1,6 @@
 package Mojolicious::Command::credentials;
 
-use Mojo::Base 'Mojolicious::Command';
+use Mojo::Base 'Mojolicious::Command', -signatures;
 
 use File::Slurper qw/read_binary write_binary/;
 use File::Temp 'tempfile';
@@ -12,8 +12,7 @@ has description => 'Edit the applications credentials';
 
 has usage => sub { shift->extract_usage };
 
-sub run {
-	my ($self, $command, @args) = @_;
+sub run($self, $command, @args) {
 	die $self->usage unless defined $command;
 
 	my $credentials = $self->app->credentials;

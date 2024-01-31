@@ -1,16 +1,12 @@
 package Mojolicious::Plugin::Credentials;
 
-use strict;
-use warnings;
-
-use Mojo::Base 'Mojolicious::Plugin';
+use Mojo::Base 'Mojolicious::Plugin', -signatures;
 
 use Carp 'croak';
 use Crypt::Credentials 0.002;
 use File::Spec::Functions 'catdir';
 
-sub _get_keys {
-	my ($self, $config) = @_;
+sub _get_keys($self, $config) {
 	if ($config->{keys}) {
 		return @{ $config->{keys} };
 	} elsif (defined $ENV{MOJO_CREDENTIALS_KEY}) {
@@ -21,9 +17,7 @@ sub _get_keys {
 	}
 }
 
-sub register {
-	my ($self, $app, $config) = @_;
-
+sub register($self, $app, $config) {
 	my $dir  = $config->{dir} // $ENV{MOJO_CREDENTIALS_DIR} // catdir($app->home, 'credentials');
 	my @keys = $self->_get_keys($config);
 
