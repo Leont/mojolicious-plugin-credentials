@@ -1,6 +1,8 @@
 Revision history for Mojolicious-Plugin-Credentials
 
 {{$NEXT}}
+
+0.003     2024-01-31 22:22:02+01:00 Europe/Brussels
           - Add --editor flag to credentials edit
 
 0.002     2024-01-31 03:01:03+01:00 Europe/Brussels
