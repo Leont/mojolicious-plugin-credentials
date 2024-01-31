@@ -19,15 +19,15 @@ sub run {
 	my $credentials = $self->app->credentials;
 
 	if ($command eq 'edit') {
-		GetOptionsFromArray(\@args, 'yaml' => \my $yaml) or die "Invalid arguments";
+		my $editor = $ENV{EDITOR} // 'vi';
+		GetOptionsFromArray(\@args, 'yaml' => \my $yaml, 'editor=s' => \$editor) or die "Invalid arguments";
 		my $name = shift @args or die 'No credential name given';
 
 		my $suffix = $yaml ? '.yaml' : undef;
 		my ($fh, $filename) = tempfile(UNLINK => 1, SUFFIX => $suffix);
 		write_binary($filename, $credentials->get($name)) if $credentials->has($name);
 
-		my @editor = defined $ENV{EDITOR} ? shellwords($ENV{EDITOR}) : 'vi';
-		system @editor, $filename and die 'Could not save file';
+		system shellwords($editor), $filename and die 'Could not save file';
 
 		my $data = read_binary($filename);
 		YAML::PP->new->load_string($data) if $yaml; # YAML validity check
@@ -72,9 +72,17 @@ This allows you to interact with your applications credentials store. It has a n
 
 =head2 edit <name>
 
-This will open an editor for you to edit the contents of a credentials entry. This expects you to define an C<EDITOR> environmental variable so it know.
+This will open an editor for you to edit the contents of a credentials entry.
 
-It will optionally take a --yaml flag that will cause it to verify the file is valid YAML (and potentially tell the editor it's YAML)
+It will optionally take the following arguments:
+
+=over 4
+
+=item * C<--editor> will set the editor used. This defaults to the environmental variable C<EDITOR> if defined.
+
+=item * C<--yaml> will cause C<credentials> to verify the file is valid YAML (and potentially tell the editor it's YAML)
+
+=back
 
 =head2 show <name>
 
