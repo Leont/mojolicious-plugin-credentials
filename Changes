@@ -1,6 +1,7 @@
 Revision history for Mojolicious-Plugin-Credentials
 
 {{$NEXT}}
+          - Adapt to supporting multiple keys
 
 0.001     2024-01-31 02:33:30+01:00 Europe/Brussels
           Initial release to an unsuspecting world

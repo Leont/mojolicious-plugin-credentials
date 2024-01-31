@@ -15,8 +15,8 @@ use File::Temp 'tempdir';
 my $tempdir = tempdir(CLEANUP => 1);
 
 plugin Credentials => {
-	key => '1234567890ABCDEF1234567890ABCDEF',
-	dir => $tempdir,
+	keys => [ '1234567890ABCDEF1234567890ABCDEF'],
+	dir  => $tempdir,
 };
 
 get '/get' => sub {

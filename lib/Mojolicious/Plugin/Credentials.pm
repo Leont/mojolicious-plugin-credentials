@@ -6,7 +6,7 @@ use warnings;
 use Mojo::Base 'Mojolicious::Plugin';
 
 use Carp 'croak';
-use Crypt::Credentials;
+use Crypt::Credentials 0.002;
 use File::Spec::Functions 'catdir';
 
 sub _get_dir {
@@ -21,16 +21,25 @@ sub _get_dir {
 	}
 }
 
+sub _get_keys {
+	my ($self, $config) = @_;
+	if ($config->{keys}) {
+		return @{ $config->{keys} };
+	} elsif (defined $ENV{MOJO_CREDENTIALS_KEY}) {
+		my @encoded_keys = split /:/, $ENV{MOJO_CREDENTIALS_KEYS};
+		return map { pack 'H*', $_ } @encoded_keys;
+	} else {
+		croak 'No credentials key given';
+	}
+}
+
 sub register {
 	my ($self, $app, $config) = @_;
 
-	my $dir = $self->_get_dir($config);
+	my $dir  = $self->_get_dir($config);
+	my @keys = $self->_get_keys($config);
 
-	my $encoded_key = $config->{key} || $ENV{MOJO_CREDENTIALS_KEY};
-	croak 'No credentials key given' unless defined $encoded_key;
-	my $key = pack 'H*', $encoded_key;
-
-	my $credentials = Crypt::Credentials->new(dir => $dir, key => $key);
+	my $credentials = Crypt::Credentials->new(dir => $dir, keys => \@keys);
 
 	$app->helper(credentials => sub { $credentials });
 
@@ -67,9 +76,9 @@ It takes two arguments, both optional.
 
 =over 4
 
-=item * key
+=item * keys
 
-This is the key used to encrypt the credentials. If not given this will use the environmental variable C<MOJO_CREDENTIALS_KEY>, and otherwise it will bail out. In both cases the key will be expected in hexadecimal form.
+This is the key used to encrypt the credentials. If not given this will use the environmental variable C<MOJO_CREDENTIALS_KEYS> (split on colons), and otherwise it will bail out. In both cases the key will be expected in hexadecimal form.
 
 =item * dir
 
