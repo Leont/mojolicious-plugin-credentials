@@ -9,16 +9,6 @@ use Carp 'croak';
 use Crypt::Credentials 0.002;
 use File::Spec::Functions 'catdir';
 
-sub _get_dir {
-	my ($self, $app, $config) = @_;
-
-	if ($config->{dir}) {
-		return $config->{dir};
-	} else {
-		return catdir($app->home->to_string, 'credentials');
-	}
-}
-
 sub _get_keys {
 	my ($self, $config) = @_;
 	if ($config->{keys}) {
@@ -34,7 +24,7 @@ sub _get_keys {
 sub register {
 	my ($self, $app, $config) = @_;
 
-	my $dir  = $self->_get_dir($app, $config);
+	my $dir  = $config->{dir} // $ENV{MOJO_CREDENTIALS_DIR} // catdir($app->home, 'credentials');
 	my @keys = $self->_get_keys($config);
 
 	my $credentials = Crypt::Credentials->new(dir => $dir, keys => \@keys);
@@ -80,7 +70,7 @@ This is the key used to encrypt the credentials. If not given this will use the 
 
 =item * dir
 
-This is the directory of the credentials. If not given it will default to C<$MOJO_HOME/credentials>, or if C<MOJO_HOME> isn't defined C<./credentials>.
+This is the directory of the credentials. If not given it will default to C<$MOJO_CREDENTIALS_DIR> or if that isn't defined C<$MOJO_HOME/credentials>.
 
 =back
 
