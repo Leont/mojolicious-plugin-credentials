@@ -10,14 +10,12 @@ use Crypt::Credentials 0.002;
 use File::Spec::Functions 'catdir';
 
 sub _get_dir {
-	my ($self, $config) = @_;
+	my ($self, $app, $config) = @_;
 
 	if ($config->{dir}) {
 		return $config->{dir};
 	} else {
-		my $home = Mojo::Home->new;
-		$home->detect;
-		return catdir($home->to_string, 'credentials');
+		return catdir($app->home->to_string, 'credentials');
 	}
 }
 
@@ -36,7 +34,7 @@ sub _get_keys {
 sub register {
 	my ($self, $app, $config) = @_;
 
-	my $dir  = $self->_get_dir($config);
+	my $dir  = $self->_get_dir($app, $config);
 	my @keys = $self->_get_keys($config);
 
 	my $credentials = Crypt::Credentials->new(dir => $dir, keys => \@keys);
