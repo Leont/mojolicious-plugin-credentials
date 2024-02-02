@@ -39,7 +39,7 @@ sub register($self, $app, $config) {
 
  plugin Credentials => { keys => \@keys };
 
- my ($password) = app->credentials->get('google');
+ my $password = app->credentials->get('google');
 
  # Mojolicious
 
