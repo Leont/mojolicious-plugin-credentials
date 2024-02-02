@@ -6,19 +6,20 @@ use Carp 'croak';
 use Crypt::Credentials 0.002;
 use File::Spec::Functions 'catdir';
 
+use Env qw/@MOJO_CREDENTIALS_KEYS $MOJO_CREDENTIALS_DIR/;
+
 sub _get_keys($self, $config) {
 	if ($config->{keys}) {
 		return @{ $config->{keys} };
-	} elsif (defined $ENV{MOJO_CREDENTIALS_KEY}) {
-		my @encoded_keys = split /:/, $ENV{MOJO_CREDENTIALS_KEYS};
-		return map { pack 'H*', $_ } @encoded_keys;
+	} elsif (@MOJO_CREDENTIALS_KEYS) {
+		return map { pack 'H*', $_ } @MOJO_CREDENTIALS_KEYS;
 	} else {
 		croak 'No credentials key given';
 	}
 }
 
 sub register($self, $app, $config) {
-	my $dir  = $config->{dir} // $ENV{MOJO_CREDENTIALS_DIR} // catdir($app->home, 'credentials');
+	my $dir  = $config->{dir} // $MOJO_CREDENTIALS_DIR // catdir($app->home, 'credentials');
 	my @keys = $self->_get_keys($config);
 
 	my $credentials = Crypt::Credentials->new(dir => $dir, keys => \@keys);
