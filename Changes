@@ -1,6 +1,7 @@
 Revision history for Mojolicious-Plugin-Credentials
 
 {{$NEXT}}
+          - Signal signature support dependency more actively
 
 0.005     2024-02-02 22:15:27+01:00 Europe/Brussels
           - Fix typo in MOJO_CREDENTIALS_KEYS handling

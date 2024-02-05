@@ -1,5 +1,7 @@
 package Mojolicious::Plugin::Credentials;
 
+use 5.020;
+
 use Mojo::Base 'Mojolicious::Plugin', -signatures;
 
 use Carp 'croak';
