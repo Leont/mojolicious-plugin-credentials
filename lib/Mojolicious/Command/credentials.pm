@@ -5,6 +5,8 @@ use Mojo::Base 'Mojolicious::Command', -signatures;
 use File::Slurper qw/read_binary write_binary/;
 use File::Temp 'tempfile';
 use Getopt::Long 'GetOptionsFromArray';
+use IPC::Cmd 'can_run';
+use List::Util 'first';
 use Text::ParseWords 'shellwords';
 use YAML::PP 'LoadFile';
 
@@ -18,7 +20,8 @@ sub run($self, $command, @args) {
 	my $credentials = $self->app->credentials;
 
 	if ($command eq 'edit') {
-		my $editor = $ENV{EDITOR} // 'vi';
+		my $editor = $ENV{EDITOR} // first { can_run($_) } qw/editor vi nano/;
+		die 'Could not find an editor' if not defined $editor;
 		GetOptionsFromArray(\@args, 'yaml' => \my $yaml, 'editor=s' => \$editor) or die "Invalid arguments";
 		my $name = shift @args or die 'No credential name given';
 

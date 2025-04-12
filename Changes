@@ -1,6 +1,7 @@
 Revision history for Mojolicious-Plugin-Credentials
 
 {{$NEXT}}
+          - Try more editors if $EDITOR isn't set
           - Fix typo in mojo credentials remove
           - Handle absence of keys more cleanly
 
