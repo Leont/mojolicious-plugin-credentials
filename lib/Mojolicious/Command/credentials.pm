@@ -33,6 +33,7 @@ sub run($self, $command, @args) {
 		system shellwords($editor), $filename and die 'Could not save file';
 
 		my $data = read_binary($filename);
+		write_binary($filename, scalar('\0' x length $data));
 		YAML::PP->new->load_string($data) if $yaml; # YAML validity check
 		$credentials->put($name, $data);
 	} elsif ($command eq 'show') {
