@@ -37,7 +37,7 @@ sub run($self, $command, @args) {
 	} elsif ($command eq 'list') {
 		say for $credentials->list;
 	} elsif ($command eq 'remove') {
-		my $name = shift @args or die 'No credential name given';A
+		my $name = shift @args or die 'No credential name given';
 		$credentials->remove($name);
 	} elsif ($command eq 'recode') {
 		print 'Please input new key in hex form: ';

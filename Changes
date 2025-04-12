@@ -1,6 +1,7 @@
 Revision history for Mojolicious-Plugin-Credentials
 
 {{$NEXT}}
+          - Fix typo in mojo credentials remove
 
 0.006     2024-02-06 00:27:06+01:00 Europe/Brussels
           - Signal signature support dependency more actively
