@@ -1,6 +1,8 @@
 Revision history for Mojolicious-Plugin-Credentials
 
 {{$NEXT}}
+
+0.007     2025-04-12 15:34:04+02:00 Europe/Brussels
           - Try more editors if $EDITOR isn't set
           - Fix typo in mojo credentials remove
           - Handle absence of keys more cleanly
